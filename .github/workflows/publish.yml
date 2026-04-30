@@ -12,36 +12,42 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - name: pnpm 설정
+        uses: pnpm/action-setup@v5
+        with:
+          version: 10
+
+      - name: Node.js 설정
+        uses: actions/setup-node@v4
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
 
-      - uses: dtolnay/rust-toolchain@stable
+      - name: Rust 설치
+        uses: dtolnay/rust-toolchain@stable
 
-      - name: Sync version from tag
+      - name: 버전 설정
         run: |
           VERSION=${GITHUB_REF_NAME#v}
           pnpm version $VERSION --no-git-tag-version
           sed -i '' "s/^version = \".*\"/version = \"$VERSION\"/" Cargo.toml
 
-      - name: Install dependencies
+      - name: 패키지 설치
         run: pnpm install
 
-      - name: Build JS
+      - name: 빌드
         run: pnpm build
 
-      - name: Publish to npm
+      - name: NPM에 배포
         run: npm publish --provenance --access public
 
-      - name: Authenticate with crates.io
+      - name: crates.io 로그인
         id: cargo-auth
         uses: rust-lang/crates-io-auth-action@v1
 
-      - name: Publish to crates.io
+      - name: crates.io 배포
         run: cargo publish --allow-dirty
         env:
           CARGO_REGISTRY_TOKEN: ${{ steps.cargo-auth.outputs.token }}
