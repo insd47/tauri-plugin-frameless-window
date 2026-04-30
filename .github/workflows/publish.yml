@@ -16,8 +16,6 @@ jobs:
 
       - name: pnpm 설정
         uses: pnpm/action-setup@v5
-        with:
-          version: 10
 
       - name: Node.js 설정
         uses: actions/setup-node@v4
