@@ -60,7 +60,11 @@ impl PopupHandle {
 
 pub trait PopupExt {
     fn popup(&self, route: &str) -> PopupBuilder;
-    async fn resolve_popup(&self, label: &str, resolved: bool) -> Result<()>;
+    fn resolve_popup(
+        &self,
+        label: &str,
+        resolved: bool,
+    ) -> impl std::future::Future<Output = Result<()>> + Send;
 }
 
 impl<T: Manager<Wry> + Sync + Send> PopupExt for T {
