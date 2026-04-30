@@ -1,0 +1,43 @@
+[package]
+name = "tauri-plugin-frameless-window"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.77.2"
+description = "Frameless webview windows for Tauri v2 — overlay title bar on macOS, decoration-less on Windows, with optional modal popup flow (sheet on macOS, disabled-parent on Windows)"
+license = "MIT"
+repository = "https://github.com/insd47/tauri-plugin-frameless-window"
+links = "tauri-plugin-frameless-window"
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu", "x86_64-apple-darwin", "x86_64-pc-windows-msvc"]
+
+[package.metadata.platforms.support]
+macos = { level = "full", notes = "Overlay title bar + sheet-style modal popup via NSWindow beginSheet" }
+windows = { level = "full", notes = "Decoration-less window with shadow + modal popup via EnableWindow" }
+linux = { level = "partial", notes = "Plain window; modal popup degrades to non-modal" }
+
+[lib]
+name = "tauri_plugin_frameless_window"
+
+[dependencies]
+log = "0.4"
+serde = { version = "1", features = ["derive"] }
+tauri = { version = "2" }
+thiserror = "2"
+tokio = { version = "1", features = ["sync"] }
+url = "2"
+uuid = { version = "1", features = ["v4"] }
+raw-window-handle = "0.6"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.6"
+block2 = "0.6"
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows-sys = { version = "0.61", features = [
+    "Win32_Foundation",
+    "Win32_UI_Input_KeyboardAndMouse",
+] }
+
+[build-dependencies]
+tauri-plugin = { version = "2", features = ["build"] }

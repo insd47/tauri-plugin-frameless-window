@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationDir": "./dist-js",
+    "outDir": "./dist-js",
+    "lib": ["ES2021", "DOM"]
+  },
+  "include": ["guest-js/**/*.ts"]
+}

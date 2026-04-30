@@ -1,0 +1,8 @@
+[default]
+description = "Allows opening route-based popup windows and closing them with a resolved value"
+permissions = [
+    "allow-open-popup",
+    "allow-close-popup",
+    "allow-is-popup-sheet",
+    "allow-show-popup",
+]
