@@ -1,5 +1,6 @@
 {
   "name": "tauri-plugin-frameless-window",
+  "author": "insd47",
   "version": "0.1.0",
   "description": "Frameless webview windows for Tauri v2 — overlay title bar on macOS, decoration-less on Windows, with optional modal popup flow",
   "license": "MIT",

@@ -2,6 +2,9 @@
 use tauri::TitleBarStyle;
 use tauri::{AppHandle, Manager, Runtime, WebviewUrl, WebviewWindowBuilder, Wry};
 
+#[cfg(target_os = "windows")]
+use tauri_plugin_window_controls::WindowControlsBuilderExt;
+
 pub trait WebviewWindowBuilderExt<R: Runtime> {
     fn frameless<L: Into<String>>(
         manager: &'_ AppHandle<R>,
@@ -30,7 +33,7 @@ where
             .hidden_title(true);
 
         #[cfg(target_os = "windows")]
-        let builder = builder.decorations(false).shadow(true);
+        let builder = builder.title_bar_overlay(true);
 
         builder
     }
