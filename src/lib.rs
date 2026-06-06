@@ -1,6 +1,6 @@
-mod builder;
 mod commands;
 pub mod error;
+mod builder;
 mod popup;
 
 pub use builder::WebviewWindowBuilderExt;
@@ -24,7 +24,7 @@ pub fn init() -> TauriPlugin<Wry> {
         .build()
 }
 
-fn setup(app: &AppHandle, api: PluginApi<Wry, ()>) -> Result<(), Box<dyn std::error::Error>> {
+fn setup(app: &AppHandle, _api: PluginApi<Wry, ()>) -> Result<(), Box<dyn std::error::Error>> {
     popup::init(app);
     Ok(())
 }

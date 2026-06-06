@@ -10,6 +10,8 @@ native-like minimize, maximize, and close controls and applies the required deco
 
 - **Frameless window builder**: `WebviewWindowBuilder::frameless(...)` creates a window with the platform-specific
   frameless preset.
+- **Single window effect shortcut**: `.effect(Effect::Mica)` and `window.set_effect(Effect::Mica)` wrap Tauri's
+  `EffectsBuilder` ceremony for one effect.
 - **Windows caption controls**: Windows frameless windows use `tauri-plugin-window-controls` for native-like caption
   buttons and Windows 11 snap-layout support.
 - **Route-based popups**: `openPopup('error/crash', { args: { message } })` opens `/popup/error/crash?message=...`.
@@ -19,7 +21,7 @@ native-like minimize, maximize, and close controls and applies the required deco
 
 ## Install
 
-From your Tauri app's `src-tauri` directory, install both Rust plugins:
+From your Tauri app's `src-tauri` directory, install the Rust plugins:
 
 ```bash
 cargo add tauri-plugin-frameless-window
@@ -61,14 +63,26 @@ Add both default permissions to your capability file, for example `src-tauri/cap
 Use `WebviewWindowBuilderExt` when creating a Tauri webview window:
 
 ```rust
-use tauri::{WebviewUrl, WebviewWindowBuilder};
+use tauri::{window::Effect, WebviewUrl, WebviewWindowBuilder};
 use tauri_plugin_frameless_window::WebviewWindowBuilderExt;
 
 let window = WebviewWindowBuilder::frameless(app, "main", WebviewUrl::App("/".into()))
 .title("My App")
 .inner_size(1280.0, 800.0)
+.effect(Effect::Mica)
 .build() ?;
 ```
+
+For existing windows, use `WebviewWindowExt` when applying an effect after creation:
+
+```rust
+use tauri::window::Effect;
+use tauri_plugin_frameless_window::WebviewWindowExt;
+
+window.set_effect(Effect::Mica) ?;
+```
+
+If you need window size or position persistence, use Tauri's official `tauri-plugin-window-state` alongside this plugin.
 
 `frameless` always starts the window hidden with `visible(false)`. Call `show()` from the frontend after your UI has
 mounted to avoid a flash of unmounted content.
@@ -163,6 +177,7 @@ Rust exports:
 
 - `init()`
 - `WebviewWindowBuilderExt`
+- `WebviewWindowExt`
 - `PopupExt`
 - `PopupBuilder`
 - `PopupHandle`

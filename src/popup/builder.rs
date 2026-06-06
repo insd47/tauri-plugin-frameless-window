@@ -1,5 +1,5 @@
-use crate::builder::WebviewWindowBuilderExt;
 use crate::error::{Error, Result};
+use crate::builder::WebviewWindowBuilderExt;
 use crate::popup::blocking;
 use crate::popup::types::{PopupHandle, PopupState};
 use crate::popup::{popup_window_label, POPUP_ROUTE_PREFIX};
