@@ -32,7 +32,10 @@ impl<R: Runtime> WebviewWindowBuilderExt<R> for WebviewWindowBuilder<'_, R, AppH
         };
 
         #[cfg(target_os = "windows")]
-        let builder = builder.decorations(false).shadow(true);
+        let builder = {
+            use tauri_plugin_window_controls::WindowControlsBuilderExt;
+            builder.window_controls_height(32)
+        };
 
         builder
     }

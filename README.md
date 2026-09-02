@@ -2,13 +2,17 @@
 
 Frameless window presets and route-based popup windows for Tauri v2.
 
+This plugin provides the frameless window preset and the popup lifecycle. On Windows, it configures native caption
+controls through [`tauri-plugin-window-controls`](https://github.com/insd47/tauri-plugin-window-controls).
+
 ## Features
 
 - **Frameless window builder**: `WebviewWindowBuilder::frameless(...)` creates a window with the platform-specific
   frameless preset.
 - **Single window effect shortcut**: `.effect(Effect::Mica)` and `window.set_effect(Effect::Mica)` wrap Tauri's
   `EffectsBuilder` ceremony for one effect.
-- **Windows frameless shape**: Windows frameless windows disable decorations while preserving the native shadow.
+- **Windows caption controls**: Windows frameless windows use native minimize, maximize, and close controls with
+  Windows 11 Snap Layout support.
 - **Route-based popups**: `openPopup('error/crash', { args: { message } })` opens `/popup/error/crash?message=...`.
 - **Blocking popup mode**: `blocking: true` presents a native sheet on macOS and disables the parent window on Windows.
 - **Promise resolution**: `closePopup(true | false)` from inside the popup resolves the caller's `openPopup(...)`
@@ -16,10 +20,11 @@ Frameless window presets and route-based popup windows for Tauri v2.
 
 ## Install
 
-From your Tauri app's `src-tauri` directory, install the Rust plugin:
+From your Tauri app's `src-tauri` directory, install the Rust plugins:
 
 ```bash
 cargo add tauri-plugin-frameless-window
+cargo add tauri-plugin-window-controls@0.2.1
 ```
 
 From your frontend package, install the JavaScript package if you use the popup helpers:
@@ -28,14 +33,19 @@ From your frontend package, install the JavaScript package if you use the popup 
 pnpm add tauri-plugin-frameless-window
 ```
 
-Register `tauri-plugin-frameless-window`:
+`tauri-plugin-window-controls` must be a direct Rust dependency of the app because the app registers it explicitly.
+Register it before `tauri-plugin-frameless-window`:
 
 ```rust
 tauri::Builder::default ()
+.plugin(tauri_plugin_window_controls::init())
 .plugin(tauri_plugin_frameless_window::init())
 .run(tauri::generate_context!())
 .expect("error while running tauri application");
 ```
+
+On Windows, configure the application manifest required by `tauri-plugin-window-controls` for layered child windows.
+See its [Windows manifest instructions](https://github.com/insd47/tauri-plugin-window-controls#windows-manifest).
 
 Add the default permission to your capability file, for example `src-tauri/capabilities/default.json`:
 
@@ -46,6 +56,8 @@ Add the default permission to your capability file, for example `src-tauri/capab
   ]
 }
 ```
+
+`tauri-plugin-window-controls` does not require a capability permission.
 
 ## Frameless Windows
 
@@ -87,8 +99,11 @@ Platform behavior:
 | Platform | `frameless` preset                                                                                                                        |
 |----------|-------------------------------------------------------------------------------------------------------------------------------------------|
 | macOS    | Uses an overlay title bar and hides the native title.                                                                                     |
-| Windows  | Disables window decorations and preserves the native shadow.                                                                              |
+| Windows  | Adds native caption controls with a default height of 32 logical pixels and preserves the native shadow.                                 |
 | Linux    | Keeps the default Tauri window shape and only applies `visible(false)`.                                                                   |
+
+Call `.window_controls_height(...)` after `frameless(...)` to override the default Windows control height. The final
+call takes precedence.
 
 ## Popup Flow
 
