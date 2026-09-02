@@ -33,8 +33,9 @@ impl<R: Runtime> WebviewWindowBuilderExt<R> for WebviewWindowBuilder<'_, R, AppH
 
         #[cfg(target_os = "windows")]
         let builder = {
+            use tauri::webview::ScrollBarStyle::FluentOverlay;
             use tauri_plugin_window_controls::WindowControlsBuilderExt;
-            builder.window_controls_height(32)
+            builder.window_controls_height(32).scroll_bar_style(FluentOverlay)
         };
 
         builder
